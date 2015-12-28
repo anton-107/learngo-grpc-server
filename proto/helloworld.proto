@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+service Greeter {
+  rpc SayWord(MyMessage) returns (MyMessage) {}
+}
+
+message MyMessage {
+  string text = 1;
+}
