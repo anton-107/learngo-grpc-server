@@ -1,7 +1,13 @@
 syntax = "proto3";
 
+import "google/api/annotations.proto";
+
 service Greeter {
-  rpc SayWord(MyMessage) returns (MyMessage) {}
+  rpc SayWord(MyMessage) returns (MyMessage) {
+    option (google.api.http) = {
+      get: "/v1/helloworld/say"
+    };
+  }
 }
 
 message MyMessage {
