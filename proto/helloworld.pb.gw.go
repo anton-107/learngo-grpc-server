@@ -29,6 +29,12 @@ var _ = runtime.String
 var _ = json.Marshal
 var _ = utilities.PascalFromSnake
 
+func request_Greeter_Healthcheck_0(ctx context.Context, client GreeterClient, req *http.Request, pathParams map[string]string) (proto.Message, error) {
+	var protoReq HealthRequest
+
+	return client.Healthcheck(ctx, &protoReq)
+}
+
 var (
 	filter_Greeter_SayWord_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
 )
@@ -73,6 +79,17 @@ func RegisterGreeterHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeM
 func RegisterGreeterHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
 	client := NewGreeterClient(conn)
 
+	mux.Handle("GET", pattern_Greeter_Healthcheck_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		resp, err := request_Greeter_Healthcheck_0(runtime.AnnotateContext(ctx, req), client, req, pathParams)
+		if err != nil {
+			runtime.HTTPError(ctx, w, err)
+			return
+		}
+
+		forward_Greeter_Healthcheck_0(ctx, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
 	mux.Handle("GET", pattern_Greeter_SayWord_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		resp, err := request_Greeter_SayWord_0(runtime.AnnotateContext(ctx, req), client, req, pathParams)
 		if err != nil {
@@ -88,9 +105,13 @@ func RegisterGreeterHandler(ctx context.Context, mux *runtime.ServeMux, conn *gr
 }
 
 var (
+	pattern_Greeter_Healthcheck_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"healthcheck"}, ""))
+
 	pattern_Greeter_SayWord_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"v1", "helloworld", "say"}, ""))
 )
 
 var (
+	forward_Greeter_Healthcheck_0 = runtime.ForwardResponseMessage
+
 	forward_Greeter_SayWord_0 = runtime.ForwardResponseMessage
 )

@@ -3,11 +3,23 @@ syntax = "proto3";
 import "google/api/annotations.proto";
 
 service Greeter {
+  rpc Healthcheck(HealthRequest) returns (HealthResponse) {
+    option (google.api.http) = {
+      get: "/healthcheck"
+    };
+  }
+
   rpc SayWord(MyMessage) returns (MyMessage) {
     option (google.api.http) = {
       get: "/v1/helloworld/say"
     };
   }
+}
+
+message HealthRequest{}
+
+message HealthResponse {
+  string status = 1;
 }
 
 message MyMessage {
